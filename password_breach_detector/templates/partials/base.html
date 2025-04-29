@@ -1,0 +1,123 @@
+
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Password Breach Detector{% endblock %}</title>
+    <!-- Tailwind CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <!-- Alpine.js -->
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.10.2/dist/cdn.min.js" defer></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <!-- HTMX -->
+    <script src="https://unpkg.com/htmx.org@1.9.2" integrity="sha384-L6OqL9pRWyyFU3+/bjdSri+iIphTN/bvYyM37tICVyOJkWZLpP2vGn6VUEXgzg6h" crossorigin="anonymous"></script>
+    <!-- Favicon -->
+    <link rel="icon" href="{% static 'img/favicon.ico' %}">
+    {% block extra_head %}{% endblock %}
+</head>
+<body x-data="{ darkMode: true }" :class="darkMode ? 'dark bg-gray-900 text-white' : 'bg-gray-100 text-gray-900'">
+    <!-- Header -->
+    <header class="border-b dark:border-gray-700 border-gray-200">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <a href="{% url 'home' %}" class="flex items-center">
+                    <img src="{% static 'img/logo.svg' %}" alt="Password Breach Detector" class="h-8 w-8">
+                    <span class="ml-2 text-xl font-bold">Password Breach Detector</span>
+                </a>
+            </div>
+            <div class="flex items-center space-x-4">
+                <!-- Dark Mode Toggle -->
+                <button @click="darkMode = !darkMode" class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700">
+                    <svg x-show="!darkMode" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                    </svg>
+                    <svg x-show="darkMode" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                    </svg>
+                </button>
+                <!-- Navigation Links -->
+                <nav class="hidden md:flex space-x-4">
+                    <a href="{% url 'dashboard' %}" class="hover:text-blue-500 dark:hover:text-blue-400">Dashboard</a>
+                    <a href="{% url 'password_check' %}" class="hover:text-blue-500 dark:hover:text-blue-400">Check Password</a>
+                    <a href="{% url 'breach_history' %}" class="hover:text-blue-500 dark:hover:text-blue-400">Breach History</a>
+                    <a href="{% url 'account_settings' %}" class="hover:text-blue-500 dark:hover:text-blue-400">Settings</a>
+                </nav>
+                <!-- Profile Menu -->
+                <div x-data="{ open: false }" class="relative">
+                    <button @click="open = !open" class="flex items-center space-x-2 focus:outline-none">
+                        <div class="h-8 w-8 rounded-full bg-blue-500 flex items-center justify-center text-white">
+                            {% if user.profile_picture %}
+                            <img src="{{ user.profile_picture.url }}" alt="{{ user.username }}" class="h-8 w-8 rounded-full">
+                            {% else %}
+                            <span class="font-bold">{{ user.username|first|upper }}</span>
+                            {% endif %}
+                        </div>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </button>
+                    <div x-show="open" @click.away="open = false" class="absolute right-0 mt-2 w-48 py-2 bg-white dark:bg-gray-800 rounded-md shadow-xl z-10">
+                        <a href="{% url 'profile' %}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">Profile</a>
+                        <a href="{% url 'account_settings' %}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">Account Settings</a>
+                        <a href="{% url 'security_settings' %}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">Security</a>
+                        <div class="border-t border-gray-200 dark:border-gray-700"></div>
+                        <a href="{% url 'account_logout' %}" class="block px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700">Log Out</a>
+                    </div>
+                </div>
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden">
+                    <button x-data="{ open: false }" @click="open = !open" class="text-gray-500 dark:text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 focus:outline-none">
+                        <svg x-show="!open" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                        <svg x-show="open" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Navigation Menu -->
+    <div x-data="{ mobileMenuOpen: false }" x-show="mobileMenuOpen" class="md:hidden bg-white dark:bg-gray-800 shadow-lg">
+        <nav class="flex flex-col px-4 py-2">
+            <a href="{% url 'dashboard' %}" class="py-2 hover:text-blue-500 dark:hover:text-blue-400">Dashboard</a>
+            <a href="{% url 'password_check' %}" class="py-2 hover:text-blue-500 dark:hover:text-blue-400">Check Password</a>
+            <a href="{% url 'breach_history' %}" class="py-2 hover:text-blue-500 dark:hover:text-blue-400">Breach History</a>
+            <a href="{% url 'account_settings' %}" class="py-2 hover:text-blue-500 dark:hover:text-blue-400">Settings</a>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8">
+        {% include 'partials/messages.html' %}
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t dark:border-gray-700 border-gray-200 py-8">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-4 md:mb-0">
+                    <p>&copy; {% now "Y" %} Password Breach Detector. All rights reserved.</p>
+                </div>
+                <div class="flex space-x-4">
+                    <a href="{% url 'privacy' %}" class="hover:text-blue-500 dark:hover:text-blue-400">Privacy Policy</a>
+                    <a href="{% url 'terms' %}" class="hover:text-blue-500 dark:hover:text-blue-400">Terms of Service</a>
+                    <a href="{% url 'about' %}" class="hover:text-blue-500 dark:hover:text-blue-400">About</a>
+                    <a href="{% url 'contact' %}" class="hover:text-blue-500 dark:hover:text-blue-400">Contact</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="{% static 'js/main.js' %}"></script>
+    {% block extra_scripts %}{% endblock %}
+</body>
+</html>
