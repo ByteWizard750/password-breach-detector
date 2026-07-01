@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block title %}Security Settings | Password Security Platform{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto bg-white border border-gray-200 rounded-2xl shadow-sm p-6 md:p-8 hover-lift">
+    <div class="mb-8 pb-4 border-b border-gray-200">
+        <h1 class="text-3xl font-extrabold text-gray-900 tracking-tight">Security Settings</h1>
+        <p class="text-gray-500 mt-1">Configure advanced login controls and two-factor authentication</p>
+    </div>
+
+    <div class="space-y-6">
+        <!-- 2FA Box -->
+        <div class="p-6 bg-gray-50 rounded-xl border border-gray-200 flex flex-col sm:flex-row items-start sm:items-center justify-between">
+            <div class="mb-4 sm:mb-0 max-w-md">
+                <h2 class="text-lg font-bold text-gray-800">Two-Factor Authentication (2FA)</h2>
+                <p class="text-gray-500 text-sm mt-1">
+                    Adds an extra layer of protection by requiring a verification code from your mobile authenticator app when logging in.
+                </p>
+            </div>
+            
+            {% if has_2fa %}
+            <div class="flex flex-col items-end">
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-green-100 text-green-800 border border-green-200 mb-3 font-mono">
+                    Active (TOTP)
+                </span>
+                <form action="{% url 'two_factor_disable' %}" method="POST" onsubmit="return confirm('Are you sure you want to disable 2FA? This will make your account less secure.');">
+                    {% csrf_token %}
+                    <button type="submit" class="py-1.5 px-4 bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 rounded-xl text-sm font-semibold transition duration-150 transform active:scale-95 btn-scale">
+                        Disable 2FA
+                    </button>
+                </form>
+            </div>
+            {% else %}
+            <div>
+                <a href="{% url 'two_factor_setup' %}" class="inline-block py-2.5 px-5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold rounded-xl shadow-md transition duration-150 transform active:scale-95 btn-scale">
+                    Enable 2FA
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

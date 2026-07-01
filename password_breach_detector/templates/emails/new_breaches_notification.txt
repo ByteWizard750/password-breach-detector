@@ -1,0 +1,14 @@
+SECURITY ALERT: New Breach Exposures
+
+Hello {{ user.username }},
+
+Our security system identified that your email address was found in new data breaches:
+
+{% for site in new_breaches %}
+* {{ site.Name }} (Exposed on: {{ site.BreachDate }})
+{% endfor %}
+
+Recommendation: Log in to your security dashboard to inspect the audit log and ensure all credentials connected with these sites are rotated immediately.
+
+--
+Password Security Platform | Automatic Security Notifications

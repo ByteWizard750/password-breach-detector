@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block title %}About | Password Security Platform{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto bg-white border border-gray-200 rounded-2xl shadow-sm p-8 hover-lift">
+    <h1 class="text-3xl font-extrabold text-gray-900 tracking-tight mb-4">About Password Security Platform</h1>
+    <p class="text-gray-600 mb-6 leading-relaxed">
+        Password Security Platform is a comprehensive credential auditing and vulnerability detection tool designed to help developers, security engineers, and individuals analyze the security of their accounts without compromising privacy.
+    </p>
+    <h2 class="text-xl font-bold text-gray-800 mb-3">Core Technology</h2>
+    <ul class="list-disc pl-6 space-y-2 text-gray-500 mb-6 font-medium">
+        <li><strong>k-Anonymity Security model</strong> to query HaveIBeenPwned API securely.</li>
+        <li><strong>Shannon Entropy Calculator</strong> for accurate cracking times.</li>
+        <li><strong>Dynamic Dashboard Analytics</strong> using Chart.js to monitor overall status.</li>
+    </ul>
+</div>
+{% endblock %}

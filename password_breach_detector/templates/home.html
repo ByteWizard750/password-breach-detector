@@ -1,0 +1,240 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Check Password Compromise | Password Security Platform{% endblock %}
+
+{% block content %}
+<div class="space-y-16 py-8">
+    <!-- Hero Section -->
+    <div class="text-center max-w-4xl mx-auto px-4">
+        <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold text-gray-900 tracking-tight leading-tight mb-6">
+            Check if Your Password Has Been Compromised — <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600">Without Ever Revealing It</span>
+        </h1>
+        <p class="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed mb-8">
+            Securely analyze password strength, detect known breaches using the Have I Been Pwned API, estimate password crack time, and receive actionable security recommendations using the privacy-preserving k-Anonymity model.
+        </p>
+    </div>
+
+    <!-- Statistics Section -->
+    <div class="max-w-6xl mx-auto px-4">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+            <div class="bg-white border border-gray-200 rounded-2xl p-6 text-center hover-lift shadow-sm">
+                <div class="text-3xl md:text-4xl font-extrabold text-blue-600 font-mono">10B+</div>
+                <div class="text-sm font-semibold text-gray-500 mt-2">Passwords Analyzed</div>
+            </div>
+            <div class="bg-white border border-gray-200 rounded-2xl p-6 text-center hover-lift shadow-sm">
+                <div class="text-3xl md:text-4xl font-extrabold text-indigo-600 font-mono">800M+</div>
+                <div class="text-sm font-semibold text-gray-500 mt-2">Known Breaches</div>
+            </div>
+            <div class="bg-white border border-gray-200 rounded-2xl p-6 text-center hover-lift shadow-sm">
+                <div class="text-3xl md:text-4xl font-extrabold text-green-600 font-mono">100%</div>
+                <div class="text-sm font-semibold text-gray-500 mt-2">Privacy Protected</div>
+            </div>
+            <div class="bg-white border border-gray-200 rounded-2xl p-6 text-center hover-lift shadow-sm">
+                <div class="text-3xl md:text-4xl font-extrabold text-gray-900 font-mono">SHA-1</div>
+                <div class="text-sm font-semibold text-gray-500 mt-2">k-Anonymity Model</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Features Overview Anchor for nav link -->
+    <div id="features" class="scroll-mt-24"></div>
+
+    <!-- Inline Analyzer & Generator Tools Section -->
+    <div class="max-w-6xl mx-auto px-4 grid grid-cols-1 lg:grid-cols-3 gap-8">
+        
+        <!-- Left: Password Auditor (Analyzer, Exposure, Composition) -->
+        <div class="lg:col-span-2 space-y-8">
+            <div class="bg-white border border-gray-200 rounded-2xl p-6 md:p-8 shadow-sm hover-lift">
+                <div class="flex items-center space-x-3 mb-6">
+                    <div class="p-2 bg-blue-50 text-blue-600 rounded-xl">
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-900">Unified Password Auditor</h2>
+                        <p class="text-sm text-gray-500">Live strength and breach analysis</p>
+                    </div>
+                </div>
+
+                <!-- Input Area -->
+                <form id="landing-auditor-form" class="space-y-6">
+                    <div class="space-y-2">
+                        <label for="landing-password-input" class="block text-sm font-semibold text-gray-700">Enter Password</label>
+                        <div class="relative password-field-container">
+                            <input type="password" id="landing-password-input" required autocomplete="off"
+                                   class="w-full px-4 py-3.5 bg-white border border-gray-300 text-gray-900 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 placeholder-gray-400 font-mono text-lg transition duration-150 premium-input"
+                                   placeholder="Type a password to audit...">
+                            <button type="button" class="password-toggle absolute right-3 top-3.5 text-gray-400 hover:text-gray-600">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Live strength progress bar -->
+                    <div id="live-strength-container" class="space-y-2 hidden">
+                        <div class="flex justify-between items-center text-sm font-semibold">
+                            <span class="text-gray-500">Live Strength:</span>
+                            <span id="live-strength-label" class="text-red-500">Weak</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div id="live-strength-bar" class="bg-red-500 h-2 rounded-full strength-progress-bar" style="width: 25%"></div>
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="flex items-center justify-between">
+                        <button type="submit" class="py-3 px-6 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold rounded-xl shadow-lg hover:shadow-blue-500/10 transition-all duration-200 transform active:scale-95 flex items-center space-x-2">
+                            <span>Analyze Password</span>
+                        </button>
+                        <div id="landing-loading" class="hidden">
+                            <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-500"></div>
+                        </div>
+                    </div>
+                </form>
+
+                <!-- Audit Results Area -->
+                <div id="landing-results-area" class="hidden mt-8 pt-8 border-t border-gray-200 space-y-6 fade-in">
+                    <h3 class="text-xl font-bold text-gray-900 mb-4">Analysis Results</h3>
+
+                    <!-- Grid cards -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- Score and Entropy -->
+                        <div class="bg-gray-50 rounded-xl p-4 border border-gray-100 flex flex-col justify-between">
+                            <div>
+                                <span class="text-xs text-gray-400 font-bold uppercase tracking-wider block">Strength & Entropy</span>
+                                <div class="text-2xl font-extrabold text-blue-600 mt-1" id="res-score-pct">0%</div>
+                            </div>
+                            <div class="mt-4 text-sm text-gray-500">
+                                Shannon Entropy: <strong class="text-gray-800 font-mono" id="res-entropy-val">0 bits</strong>
+                            </div>
+                        </div>
+
+                        <!-- Crack Time -->
+                        <div class="bg-gray-50 rounded-xl p-4 border border-gray-100 flex flex-col justify-between">
+                            <div>
+                                <span class="text-xs text-gray-400 font-bold uppercase tracking-wider block">GPU Crack Estimate</span>
+                                <div class="text-lg font-bold text-gray-900 mt-1 break-words" id="res-crack-time">instant</div>
+                            </div>
+                            <div class="mt-4 text-xs text-gray-500">
+                                Estimated using high-end multi-GPU cracking speeds
+                            </div>
+                        </div>
+
+                        <!-- Breach status -->
+                        <div class="bg-gray-50 rounded-xl p-4 border border-gray-100 flex flex-col justify-between md:col-span-2">
+                            <div class="flex items-center space-x-3">
+                                <div class="p-1.5 rounded-full" id="res-status-icon-bg">
+                                    <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" id="res-status-icon">
+                                        <!-- dynamic path -->
+                                    </svg>
+                                </div>
+                                <div>
+                                    <span class="text-xs text-gray-400 font-bold uppercase tracking-wider block">Breach Status</span>
+                                    <div class="text-lg font-bold text-gray-900 mt-0.5" id="res-status-text">Not compromised</div>
+                                </div>
+                            </div>
+                            <div class="mt-4 text-sm text-gray-500" id="res-breach-desc">
+                                This password was not found in database leaks.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Password Composition Pie Chart -->
+                    <div class="bg-gray-50 rounded-xl p-4 border border-gray-100">
+                        <span class="text-xs text-gray-400 font-bold uppercase tracking-wider block mb-4">Password Character Composition</span>
+                        <div class="h-48 flex items-center justify-center">
+                            <canvas id="compositionChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Recommendations -->
+                    <div class="bg-gray-50 rounded-xl p-4 border border-gray-100 space-y-2">
+                        <span class="text-xs text-gray-400 font-bold uppercase tracking-wider block">Security Recommendations</span>
+                        <div class="text-sm text-gray-700" id="res-recs-list">
+                            <!-- bulleted list -->
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Right: Password Generator -->
+        <div class="space-y-8">
+            <div class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm hover-lift">
+                <div class="flex items-center space-x-3 mb-6">
+                    <div class="p-2 bg-indigo-50 text-indigo-600 rounded-xl">
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-bold text-gray-900">Secure Generator</h2>
+                        <p class="text-xs text-gray-500">Produce unique corporate credentials</p>
+                    </div>
+                </div>
+
+                <div class="space-y-6">
+                    <!-- Display password -->
+                    <div class="relative p-3 bg-gray-50 rounded-xl border border-gray-200 flex items-center justify-between">
+                        <span id="generated-password-display" class="font-mono text-lg text-indigo-600 font-extrabold select-all tracking-wide break-all mr-10">
+                            Click Generate...
+                        </span>
+                        <button id="copy-generated-btn" class="absolute right-3 p-1.5 rounded-lg bg-white border border-gray-200 hover:bg-gray-100 text-gray-500 hover:text-gray-900 transition duration-150" title="Copy to clipboard">
+                            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m-5 4h5m-5 4h3m1 2a2 2 0 10-4 0v1a2 2 0 002 2h2a2 2 0 002-2v-1z" />
+                            </svg>
+                        </button>
+                    </div>
+
+                    <!-- Config settings -->
+                    <div class="space-y-4">
+                        <div>
+                            <div class="flex justify-between text-sm font-semibold text-gray-600 mb-1">
+                                <span>Length</span>
+                                <span id="gen-length-val" class="font-bold text-blue-600 font-mono">16</span>
+                            </div>
+                            <input type="range" id="gen-length" min="8" max="64" value="16"
+                                   class="w-full h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                        </div>
+
+                        <div class="space-y-3 pt-2">
+                            <label class="flex items-center justify-between cursor-pointer">
+                                <span class="text-sm font-medium text-gray-600">Uppercase Letters (A-Z)</span>
+                                <input type="checkbox" id="gen-upper" checked class="w-4 h-4 rounded text-blue-600 focus:ring-blue-500 bg-white border-gray-300">
+                            </label>
+                            <label class="flex items-center justify-between cursor-pointer">
+                                <span class="text-sm font-medium text-gray-600">Lowercase Letters (a-z)</span>
+                                <input type="checkbox" id="gen-lower" checked class="w-4 h-4 rounded text-blue-600 focus:ring-blue-500 bg-white border-gray-300">
+                            </label>
+                            <label class="flex items-center justify-between cursor-pointer">
+                                <span class="text-sm font-medium text-gray-600">Numbers (0-9)</span>
+                                <input type="checkbox" id="gen-numbers" checked class="w-4 h-4 rounded text-blue-600 focus:ring-blue-500 bg-white border-gray-300">
+                            </label>
+                            <label class="flex items-center justify-between cursor-pointer">
+                                <span class="text-sm font-medium text-gray-600">Special Symbols (!@#$)</span>
+                                <input type="checkbox" id="gen-symbols" checked class="w-4 h-4 rounded text-blue-600 focus:ring-blue-500 bg-white border-gray-300">
+                            </label>
+                            <label class="flex items-center justify-between cursor-pointer">
+                                <span class="text-sm font-medium text-gray-600">Exclude Similar (l, 1, o, 0)</span>
+                                <input type="checkbox" id="gen-similar" class="w-4 h-4 rounded text-blue-600 focus:ring-blue-500 bg-white border-gray-300">
+                            </label>
+                        </div>
+                    </div>
+
+                    <button id="generate-pw-btn" class="w-full py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold rounded-xl shadow-lg hover:shadow-blue-500/10 transition-all duration-200 transform active:scale-95">
+                        Generate Password
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{% static 'js/crypto-js.min.js' %}"></script>
+<script src="{% static 'js/password-check.js' %}"></script>
+{% endblock %}

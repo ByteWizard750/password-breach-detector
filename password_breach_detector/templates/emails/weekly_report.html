@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Weekly Security Report</title>
+</head>
+<body style="font-family: sans-serif; background-color: #0f172a; color: #f1f5f9; padding: 20px;">
+    <div style="max-w-600px; margin: 0 auto; background-color: #1e293b; padding: 30px; border-radius: 8px; border: 1px solid #334155;">
+        <h1 style="color: #3b82f6; font-size: 24px; margin-top: 0;">Weekly Security Report</h1>
+        <p>Hello {{ user.username }},</p>
+        <p>Here is your weekly summary of your password security profile:</p>
+        
+        <table style="width: 100%; margin: 20px 0; color: #cbd5e1; border-collapse: collapse;">
+            <tr>
+                <td style="padding: 8px 0; border-bottom: 1px solid #334155;"><strong>Overall Security Score:</strong></td>
+                <td style="padding: 8px 0; border-bottom: 1px solid #334155; text-align: right; color: #3b82f6; font-weight: bold;">{{ security_score }}%</td>
+            </tr>
+            <tr>
+                <td style="padding: 8px 0; border-bottom: 1px solid #334155;"><strong>Total Password Audits:</strong></td>
+                <td style="padding: 8px 0; border-bottom: 1px solid #334155; text-align: right;">{{ total_checks }}</td>
+            </tr>
+            <tr>
+                <td style="padding: 8px 0; border-bottom: 1px solid #334155;"><strong>Compromised Credentials:</strong></td>
+                <td style="padding: 8px 0; border-bottom: 1px solid #334155; text-align: right; color: #ef4444;">{{ compromised_checks }}</td>
+            </tr>
+            <tr>
+                <td style="padding: 8px 0; border-bottom: 1px solid #334155;"><strong>Reused Passwords:</strong></td>
+                <td style="padding: 8px 0; border-bottom: 1px solid #334155; text-align: right; color: #eab308;">{{ reused_count }}</td>
+            </tr>
+            <tr>
+                <td style="padding: 8px 0; border-bottom: 1px solid #334155;"><strong>Average Password Strength:</strong></td>
+                <td style="padding: 8px 0; border-bottom: 1px solid #334155; text-align: right;">{{ avg_strength }}%</td>
+            </tr>
+        </table>
+        
+        <p>To improve your security score, make sure to enable two-factor authentication (2FA) and rotate any compromised or reused passwords.</p>
+        <hr style="border: 0; border-top: 1px solid #334155; margin: 30px 0;">
+        <p style="font-size: 12px; color: #64748b;">Password Security Platform | Weekly Security Digest</p>
+    </div>
+</body>
+</html>

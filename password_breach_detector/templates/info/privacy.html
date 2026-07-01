@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block title %}Privacy Policy | Password Security Platform{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto bg-white border border-gray-200 rounded-2xl shadow-sm p-8 hover-lift">
+    <h1 class="text-3xl font-extrabold text-gray-900 tracking-tight mb-4">Privacy Policy</h1>
+    <p class="text-gray-600 mb-4 leading-relaxed">
+        Your privacy is critical to us. We build security tools on the absolute principle that your plain text credentials must never be exposed.
+    </p>
+    <h2 class="text-lg font-bold text-gray-800 mb-2">Data Transmission & Hash Checks</h2>
+    <p class="text-gray-600 mb-4 leading-relaxed">
+        When using our k-Anonymity checks, only the first 5 characters of your SHA-1 password hash are sent to the external HaveIBeenPwned database. The rest is checked inside your local browser. The raw text password is never stored or logged in our databases.
+    </p>
+</div>
+{% endblock %}

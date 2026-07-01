@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block title %}Verify Two-Factor Authentication | Password Security Platform{% endblock %}
+
+{% block content %}
+<div class="max-w-md mx-auto my-12 bg-white border border-gray-200 rounded-2xl shadow-sm p-8 hover-lift">
+    <div class="text-center mb-6">
+        <h1 class="text-3xl font-extrabold text-gray-900 tracking-tight">2FA Verification</h1>
+        <p class="text-gray-500 mt-2">Enter the verification code from your authenticator app</p>
+    </div>
+
+    <form method="POST" class="space-y-4">
+        {% csrf_token %}
+        <div class="space-y-2">
+            <label for="token" class="block text-sm font-semibold text-gray-700">Authenticator Code</label>
+            <input type="text" id="token" name="token" required placeholder="123456" autofocus autocomplete="off"
+                   class="w-full px-4 py-3 bg-white border border-gray-300 text-gray-900 rounded-xl text-center tracking-widest font-mono text-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 placeholder-gray-400 transition duration-150 premium-input">
+        </div>
+
+        <button type="submit" class="w-full py-3.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold rounded-xl shadow-lg hover:shadow-blue-500/10 transition duration-150 transform active:scale-95 btn-scale">
+            Verify Code
+        </button>
+    </form>
+</div>
+{% endblock %}

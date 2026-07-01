@@ -1,130 +1,258 @@
 {% extends 'base.html' %}
-{% block title %}Security Dashboard{% endblock %}
+{% block title %}Security Dashboard | Password Security Platform{% endblock %}
 
 {% block content %}
-<div class="max-w-6xl mx-auto">
-    <h1 class="text-3xl font-bold mb-6">Security Dashboard</h1>
+<div class="max-w-6xl mx-auto space-y-8">
     
-    <!-- Security Score Card -->
-    <div class="mb-8 bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
-        <div class="flex flex-col md:flex-row items-center justify-between">
-            <div>
-                <h2 class="text-xl font-semibold mb-2">Your Security Score</h2>
-                <p class="text-gray-600 dark:text-gray-300">Based on your security practices and account settings</p>
+    <!-- Top Row: Security Score Circular Gauge & Recommendations -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <!-- 1. Circular Security Score Card -->
+        <div class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm hover-lift flex flex-col items-center justify-between">
+            <div class="text-center w-full">
+                <h2 class="text-lg font-bold text-gray-800">Overall Security Score</h2>
+                <p class="text-xs text-gray-500 mt-1">Calculated from audits and login settings</p>
             </div>
-            <div class="mt-4 md:mt-0 flex items-center">
-                <div class="w-24 h-24 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center">
-                    <span class="text-3xl font-bold text-blue-600 dark:text-blue-400">{{ security_score }}%</span>
-                </div>
-            </div>
-        </div>
-        
-        <div class="mt-6">
-            <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
-                <div class="bg-blue-600 h-2.5 rounded-full" style="width: {{ security_score }}%"></div>
-            </div>
-        </div>
-        
-        <div class="mt-6">
-            <h3 class="font-medium mb-2">Recommendations to improve your score:</h3>
-            <ul class="list-disc pl-5 space-y-1 text-gray-600 dark:text-gray-300">
-                {% for recommendation in security_recommendations %}
-                <li>{{ recommendation }}</li>
-                {% empty %}
-                <li>No recommendations at this time - your security settings look good!</li>
-                {% endfor %}
-            </ul>
-        </div>
-    </div>
-    
-    <!-- Recent Activity Card -->
-    <div class="mb-8 grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
-            <h2 class="text-xl font-semibold mb-4">Recent Activity</h2>
-            {% if recent_activities %}
-            <div class="space-y-4">
-                {% for activity in recent_activities %}
-                <div class="flex items-start">
-                    <div class="flex-shrink-0">
-                        {% if activity.type == 'login' %}
-                        <svg class="h-5 w-5 text-green-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
-                        </svg>
-                        {% elif activity.type == 'password_check' %}
-                        <svg class="h-5 w-5 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                        </svg>
-                        {% elif activity.type == 'setting_change' %}
-                        <svg class="h-5 w-5 text-yellow-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                        </svg>
-                        {% else %}
-                        <svg class="h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                        {% endif %}
-                    </div>
-                    <div class="ml-3">
-                        <p class="text-sm font-medium">{{ activity.description }}</p>
-                        <p class="text-xs text-gray-500 dark:text-gray-400">{{ activity.timestamp|date:"M d, Y H:i" }}</p>
-                        {% if activity.location %}
-                        <p class="text-xs text-gray-500 dark:text-gray-400">{{ activity.location }}</p>
-                        {% endif %}
-                    </div>
-                </div>
-                {% endfor %}
-            </div>
-            {% else %}
-            <p class="text-gray-600 dark:text-gray-300">No recent activity to display.</p>
-            {% endif %}
             
-            <div class="mt-4 text-right">
-                <a href="{% url 'activity_history' %}" class="text-blue-600 dark:text-blue-400 hover:underline text-sm">View all activity</a>
+            <div class="my-6 relative flex items-center justify-center">
+                <svg class="w-32 h-32 transform -rotate-90">
+                    <circle cx="64" cy="64" r="54" stroke="#f1f5f9" stroke-width="8" fill="transparent" />
+                    <circle cx="64" cy="64" r="54" stroke="#3b82f6" stroke-width="8" fill="transparent"
+                            stroke-dasharray="339.29"
+                            stroke-dashoffset="calc(339.29 - (339.29 * {{ security_score }}) / 100)"
+                            class="transition-all duration-500 ease-out" />
+                </svg>
+                <div class="absolute text-center">
+                    <span class="text-3xl font-extrabold text-gray-900">{{ security_score }}%</span>
+                </div>
+            </div>
+
+            <div class="w-full text-center">
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold {% if security_score >= 80 %}bg-green-100 text-green-700{% elif security_score >= 50 %}bg-yellow-100 text-yellow-700{% else %}bg-red-100 text-red-700{% endif %}">
+                    {% if security_score >= 80 %}Secure{% elif security_score >= 50 %}Needs Audit{% else %}Vulnerable{% endif %}
+                </span>
             </div>
         </div>
-        
-        <!-- Password Health Summary -->
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
-            <h2 class="text-xl font-semibold mb-4">Password Health</h2>
-            <div class="space-y-4">
-                <!-- Password Health Chart -->
-                <div class="h-48">
-                    <canvas id="passwordHealthChart"></canvas>
-                </div>
-                
-                <div class="mt-4 space-y-2">
-                    <div class="flex justify-between items-center">
-                        <span class="text-sm text-gray-600 dark:text-gray-300">Strong passwords</span>
-                        <span class="font-medium">{{ password_stats.strong }}</span>
-                    </div>
-                    <div class="flex justify-between items-center">
-                        <span class="text-sm text-gray-600 dark:text-gray-300">Medium passwords</span>
-                        <span class="font-medium">{{ password_stats.medium }}</span>
-                    </div>
-                    <div class="flex justify-between items-center">
-                        <span class="text-sm text-gray-600 dark:text-gray-300">Weak passwords</span>
-                        <span class="font-medium">{{ password_stats.weak }}</span>
-                    </div>
-                    <div class="flex justify-between items-center">
-                        <span class="text-sm text-gray-600 dark:text-gray-300">Compromised passwords</span>
-                        <span class="font-medium text-red-600">{{ password_stats.compromised }}</span>
-                    </div>
-                </div>
-                
-                <div class="mt-4 text-right">
-                    <a href="{% url 'password_health' %}" class="text-blue-600 dark:text-blue-400 hover:underline text-sm">View detailed report</a>
-                </div>
+
+        <!-- 2. Security Recommendations Card -->
+        <div class="md:col-span-2 bg-white border border-gray-200 rounded-2xl p-6 shadow-sm hover-lift flex flex-col justify-between">
+            <div>
+                <h2 class="text-lg font-bold text-gray-800 mb-4">Security Recommendations</h2>
+                <ul class="space-y-3">
+                    {% for recommendation in security_recommendations %}
+                    <li class="flex items-start text-sm text-gray-600">
+                        <svg class="h-5 w-5 text-yellow-500 mr-2.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                        </svg>
+                        <span>{{ recommendation }}</span>
+                    </li>
+                    {% empty %}
+                    <li class="flex items-center text-sm text-green-600 font-semibold">
+                        <svg class="h-5 w-5 mr-2.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <span>Your security profile matches standard guidelines!</span>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <!-- Quick Action button -->
+            <div class="mt-6 pt-4 border-t border-gray-100 flex justify-end">
+                <a href="{% url 'password_check' %}" class="text-sm font-semibold text-blue-600 hover:text-blue-700">Run New Password Audit &rarr;</a>
             </div>
         </div>
     </div>
-    
-    <!-- Quick Actions -->
-    <div class="mb-8">
-        <h2 class="text-xl font-semibold mb-4">Quick Actions</h2>
+
+    <!-- Quick Actions Grid -->
+    <div>
+        <h3 class="text-xl font-bold text-gray-900 mb-4">Quick Actions</h3>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <a href="{% url 'password_check' %}" class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
-                <div class="flex flex-col items-center text-center">
-                    <div class="h-12 w-12 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center mb-4">
-                        <svg class="h-6 w-6 text-blue-600 dark:text-blue-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016
+            <a href="{% url 'password_check' %}" class="bg-white border border-gray-200 rounded-2xl p-5 hover-lift shadow-sm block">
+                <div class="h-10 w-10 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center mb-4">
+                    <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                    </svg>
+                </div>
+                <h4 class="font-bold text-gray-800">Check Password</h4>
+                <p class="text-xs text-gray-500 mt-1">Audit exposure against data breaches</p>
+            </a>
+            
+            <a href="{% url 'two_factor_setup' %}" class="bg-white border border-gray-200 rounded-2xl p-5 hover-lift shadow-sm block">
+                <div class="h-10 w-10 bg-green-50 text-green-600 rounded-xl flex items-center justify-center mb-4">
+                    <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                    </svg>
+                </div>
+                <h4 class="font-bold text-gray-800">Two-Factor Auth</h4>
+                <p class="text-xs text-gray-500 mt-1">Secure logins with mobile TOTP</p>
+            </a>
+
+            <a href="{% url 'password_health' %}" class="bg-white border border-gray-200 rounded-2xl p-5 hover-lift shadow-sm block">
+                <div class="h-10 w-10 bg-yellow-50 text-yellow-600 rounded-xl flex items-center justify-center mb-4">
+                    <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 002 2h2a2 2 0 002-2" />
+                    </svg>
+                </div>
+                <h4 class="font-bold text-gray-800">Health Analytics</h4>
+                <p class="text-xs text-gray-500 mt-1">View interactive security charts</p>
+            </a>
+
+            <a href="{% url 'account_settings' %}" class="bg-white border border-gray-200 rounded-2xl p-5 hover-lift shadow-sm block">
+                <div class="h-10 w-10 bg-purple-50 text-purple-600 rounded-xl flex items-center justify-center mb-4">
+                    <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                    </svg>
+                </div>
+                <h4 class="font-bold text-gray-800">Preferences</h4>
+                <p class="text-xs text-gray-500 mt-1">Configure profile and notifications</p>
+            </a>
+        </div>
+    </div>
+
+    <!-- Active Security Alerts -->
+    {% if security_alerts %}
+    <div>
+        <h3 class="text-xl font-bold text-gray-900 mb-4">Critical Security Alerts</h3>
+        <div class="space-y-4">
+            {% for alert in security_alerts %}
+            <div class="flex items-start p-4 rounded-xl border {% if alert.severity == 'high' %}bg-red-50 border-red-200 text-red-800{% else %}bg-yellow-50 border-yellow-200 text-yellow-800{% endif %}">
+                <div class="flex-shrink-0">
+                    <svg class="h-5 w-5 {% if alert.severity == 'high' %}text-red-500{% else %}text-yellow-500{% endif %}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                </div>
+                <div class="ml-3 flex-1 md:flex md:justify-between items-center">
+                    <div>
+                        <h4 class="text-sm font-bold">{{ alert.title }}</h4>
+                        <p class="text-xs mt-1 text-gray-600">{{ alert.description }}</p>
+                    </div>
+                    <div class="mt-3 md:mt-0">
+                        <a href="{{ alert.action_url }}" class="inline-flex items-center py-1.5 px-3 bg-white border border-gray-300 rounded-lg text-xs font-semibold hover:bg-gray-50 transition duration-150">
+                            {{ alert.action_text }}
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Audit Statistics & Health Breakdown Charts -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <!-- Password Health Doughnut -->
+        <div class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm hover-lift">
+            <h2 class="text-lg font-bold text-gray-800 mb-4">Password Health Overview</h2>
+            <div class="h-56">
+                <canvas id="passwordHealthChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Recent Audit History List -->
+        <div class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm hover-lift flex flex-col justify-between">
+            <div>
+                <h2 class="text-lg font-bold text-gray-800 mb-4">Recent Password Audits</h2>
+                {% if recent_checks %}
+                <div class="divide-y divide-gray-100">
+                    {% for check in recent_checks %}
+                    <div class="py-3 flex justify-between items-center">
+                        <div class="flex items-center space-x-3">
+                            <span class="font-mono text-sm text-blue-600 bg-blue-50 px-2.5 py-1 rounded-lg">{{ check.hash_prefix }}</span>
+                            <span class="text-xs text-gray-400 font-semibold">{{ check.check_timestamp|date:"M d, H:i" }}</span>
+                        </div>
+                        <div>
+                            {% if check.was_breached %}
+                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-red-100 text-red-800">
+                                Compromised ({{ check.breach_count }})
+                            </span>
+                            {% else %}
+                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-800">
+                                Secured
+                            </span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p class="text-sm text-gray-500 text-center py-6">No credentials audited yet.</p>
+                {% endif %}
+            </div>
+            
+            <div class="pt-4 border-t border-gray-100 text-right">
+                <a href="{% url 'breach_history' %}" class="text-sm font-semibold text-blue-600 hover:text-blue-700">View complete logs &rarr;</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Recent Login & Settings Activity -->
+    <div class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm hover-lift">
+        <h2 class="text-lg font-bold text-gray-800 mb-4">Recent Security Activity</h2>
+        {% if recent_activities %}
+        <div class="space-y-4">
+            {% for activity in recent_activities %}
+            <div class="flex items-start">
+                <div class="h-8 w-8 rounded-lg bg-gray-50 border border-gray-200 flex items-center justify-center flex-shrink-0">
+                    {% if activity.activity_type == 'login' %}
+                    <svg class="h-4 w-4 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+                    </svg>
+                    {% elif activity.activity_type == 'password_check' %}
+                    <svg class="h-4 w-4 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                    </svg>
+                    {% else %}
+                    <svg class="h-4 w-4 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                    </svg>
+                    {% endif %}
+                </div>
+                <div class="ml-3">
+                    <p class="text-sm font-semibold text-gray-800">{{ activity.get_activity_type_display }} executed successfully.</p>
+                    <p class="text-xs text-gray-400 font-medium mt-0.5">{{ activity.timestamp|date:"M d, Y H:i:s" }} &bull; IP: {{ activity.ip_address }} &bull; {{ activity.browser }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p class="text-sm text-gray-500 text-center py-6">No account operations recorded.</p>
+        {% endif %}
+    </div>
+
+</div>
+
+<!-- Health Chart Script -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const ctx = document.getElementById('passwordHealthChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Strong', 'Medium', 'Weak', 'Compromised'],
+                datasets: [{
+                    data: [
+                        {{ password_stats.strong }}, 
+                        {{ password_stats.medium }}, 
+                        {{ password_stats.weak }}, 
+                        {{ password_stats.compromised }}
+                    ],
+                    backgroundColor: ['#10B981', '#FBBF24', '#EF4444', '#7F1D1D'],
+                    borderWidth: 1,
+                    borderColor: '#ffffff'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '75%',
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: { boxWidth: 12, padding: 15 }
+                    }
+                }
+            }
+        });
+    });
+</script>
+{% endblock %}

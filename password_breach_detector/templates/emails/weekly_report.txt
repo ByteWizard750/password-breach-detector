@@ -1,0 +1,16 @@
+Weekly Security Report
+
+Hello {{ user.username }},
+
+Here is your weekly summary of your password security profile:
+
+* Overall Security Score: {{ security_score }}%
+* Total Password Audits: {{ total_checks }}
+* Compromised Credentials: {{ compromised_checks }}
+* Reused Passwords: {{ reused_count }}
+* Average Password Strength: {{ avg_strength }}%
+
+To improve your security score, make sure to enable two-factor authentication (2FA) and rotate any compromised or reused passwords.
+
+--
+Password Security Platform | Weekly Security Digest

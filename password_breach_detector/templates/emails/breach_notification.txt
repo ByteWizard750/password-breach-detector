@@ -1,0 +1,12 @@
+SECURITY ALERT: Compromised Password
+
+Hello {{ user.username }},
+
+Our auditing system detected that a password checked on {{ check_date|date:"F d, Y H:i" }} was found in known public data breaches.
+
+Breach Count: {{ breach_count|default:"0" }} exposures
+
+Action Required: If you currently use this password on any online service, please change it immediately to protect your accounts from credential stuffing attacks.
+
+--
+Password Security Platform | Automatic Security Notifications

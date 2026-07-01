@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>New Account Exposures Alert</title>
+</head>
+<body style="font-family: sans-serif; background-color: #0f172a; color: #f1f5f9; padding: 20px;">
+    <div style="max-w-600px; margin: 0 auto; background-color: #1e293b; padding: 30px; border-radius: 8px; border: 1px solid #334155;">
+        <h1 style="color: #ef4444; font-size: 24px; margin-top: 0;">SECURITY ALERT: New Breach Exposures</h1>
+        <p>Hello {{ user.username }},</p>
+        <p>Our security system identified that your email address was found in new data breaches:</p>
+        
+        <ul style="color: #cbd5e1; line-height: 1.6;">
+            {% for site in new_breaches %}
+            <li><strong>{{ site.Name }}</strong> (Exposed on: {{ site.BreachDate }})</li>
+            {% endfor %}
+        </ul>
+        
+        <p><strong>Recommendation:</strong> Log in to your security dashboard to inspect the audit log and ensure all credentials connected with these sites are rotated immediately.</p>
+        <hr style="border: 0; border-top: 1px solid #334155; margin: 30px 0;">
+        <p style="font-size: 12px; color: #64748b;">Password Security Platform | Automatic Security Notifications</p>
+    </div>
+</body>
+</html>
