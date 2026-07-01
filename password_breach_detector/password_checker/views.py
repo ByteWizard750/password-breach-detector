@@ -519,3 +519,29 @@ def api_security_score(request):
         'security_score': security_score,
         'recommendations': recs
     })
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def api_ai_advisor_chat(request):
+    """
+    POST /api/ai-advisor/chat
+    Enables users to chat with Sentinel AI, which uses context-aware profile summaries.
+    """
+    prompt = request.data.get('message', '').strip()
+    if not prompt:
+        return Response({'error': 'Message parameter is required.'}, status=status.HTTP_400_BAD_REQUEST)
+        
+    try:
+        from .ai_service import AIService
+        response_text, is_fallback = AIService.chat(request.user, prompt)
+        return Response({
+            'response': response_text,
+            'is_fallback': is_fallback
+        })
+    except Exception as e:
+        logger.error(f"AI Advisor view error: {str(e)}")
+        # Ultimate fallback response to ensure zero crashes
+        return Response({
+            'response': "Running in Offline Security Advisor mode. I can help explain entropy, k-Anonymity, and score improvements.",
+            'is_fallback': True
+        })

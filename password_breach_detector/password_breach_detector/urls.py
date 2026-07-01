@@ -49,6 +49,7 @@ urlpatterns = [
     path('api/dashboard', checker_views.api_dashboard, name='api_dashboard'),
     path('api/generate-password', checker_views.api_generate_password, name='api_generate_password'),
     path('api/security-score', checker_views.api_security_score, name='api_security_score'),
+    path('api/ai-advisor/chat', checker_views.api_ai_advisor_chat, name='api_ai_advisor_chat'),
     
     # Viewset endpoints (for frontend password-check.js)
     path('', include(router.urls)),

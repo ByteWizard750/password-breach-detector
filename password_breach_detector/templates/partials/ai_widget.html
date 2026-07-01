@@ -1,0 +1,125 @@
+<!-- Floating AI Security Assistant Widget -->
+<div id="ai-chat-widget" x-data="{ open: false, minimized: false }" class="fixed bottom-6 right-6 z-50 font-sans">
+    
+    <!-- Chat Toggle Trigger Button -->
+    <button @click="open = !open; minimized = false" x-show="!open" 
+            class="flex items-center space-x-2 px-5 py-3.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold rounded-full shadow-2xl hover:shadow-blue-500/20 transform hover:-translate-y-0.5 transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+        <span class="text-lg">🤖</span>
+        <span class="text-sm">Ask AI Assistant</span>
+    </button>
+
+    <!-- Chat Window Container -->
+    <div x-show="open" x-transition:enter="transition ease-out duration-300 transform" 
+         x-transition:enter-start="opacity-0 translate-y-10 scale-95" 
+         x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+         x-transition:leave="transition ease-in duration-200 transform"
+         x-transition:leave-start="opacity-100 translate-y-0 scale-100"
+         x-transition:leave-end="opacity-0 translate-y-10 scale-95"
+         class="bg-white border border-gray-200 rounded-2xl shadow-2xl flex flex-col overflow-hidden transition-all duration-300 z-50"
+         :style="minimized ? 'width: 320px; height: 64px;' : 'width: 440px; max-width: calc(100vw - 2rem); height: 600px; max-height: calc(100vh - 2rem);'">
+        
+        <!-- Header -->
+        <div class="px-5 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white flex items-center justify-between cursor-pointer shadow-md"
+             @click="minimized = !minimized">
+            <div class="flex items-center space-x-3">
+                <span class="text-2xl">🤖</span>
+                <div>
+                    <h3 class="font-bold text-sm leading-none">AI Security Assistant</h3>
+                    <span id="ai-status-label" class="text-[10px] text-blue-100 font-semibold mt-1 inline-block">Your Cybersecurity Assistant</span>
+                </div>
+            </div>
+            
+            <div class="flex items-center space-x-2.5" @click.stop>
+                <!-- Clear Button -->
+                <button id="ai-clear-btn" class="p-1 rounded hover:bg-white/10 text-white focus:outline-none transition duration-150" title="Clear Conversation">
+                    <svg class="h-4.5 w-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
+                </button>
+                <!-- Minimize Button -->
+                <button @click="minimized = !minimized" class="p-1 rounded hover:bg-white/10 text-white focus:outline-none transition duration-150" title="Minimize Chat">
+                    <svg class="h-4.5 w-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" x-show="!minimized">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 12H6" />
+                    </svg>
+                    <svg class="h-4.5 w-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" x-show="minimized">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4M4 40l5-5m11 5v-4m0 0h-4m4 0l-5-5" />
+                    </svg>
+                </button>
+                <!-- Close Button -->
+                <button @click="open = false" class="p-1 rounded hover:bg-white/10 text-white focus:outline-none transition duration-150" title="Close Chat">
+                    <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Chat Area (Hidden if Minimized) -->
+        <div x-show="!minimized" class="flex-grow flex flex-col overflow-hidden bg-gray-50">
+            <!-- Messages List -->
+            <div id="ai-messages-box" class="flex-grow overflow-y-auto p-4 space-y-4" style="max-height: 440px;">
+                
+                <!-- Initial Welcome -->
+                <div class="flex items-start space-x-2.5">
+                    <div class="h-7 w-7 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center flex-shrink-0 font-bold text-xs">AI</div>
+                    <div class="bg-blue-50 border border-blue-100 rounded-2xl rounded-tl-none p-3.5 shadow-sm text-sm text-gray-800 leading-relaxed max-w-[85%]">
+                        Hello, {{ user.username|default:"Guest" }} 👋<br><br>
+                        I'm your **AI Security Assistant**.<br><br>
+                        I can help you understand your password strength, explain breaches, improve your security score, and answer cybersecurity questions.<br><br>
+                        Ask me anything.
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Suggested Quick Questions Scroll -->
+            <div id="ai-suggestions-bar" class="px-4 py-2 border-t border-gray-100 bg-white overflow-x-auto whitespace-nowrap flex space-x-2 scrollbar-none scroll-smooth">
+                <button class="ai-suggest-chip inline-block px-3.5 py-1.5 bg-blue-50 border border-blue-100 hover:bg-blue-100 hover:border-blue-200 text-blue-700 text-xs font-semibold rounded-full transition duration-150 transform active:scale-95 flex-shrink-0" 
+                        data-prompt="Explain my security score">
+                    Explain My Score
+                </button>
+                <button class="ai-suggest-chip inline-block px-3.5 py-1.5 bg-blue-50 border border-blue-100 hover:bg-blue-100 hover:border-blue-200 text-blue-700 text-xs font-semibold rounded-full transition duration-150 transform active:scale-95 flex-shrink-0" 
+                        data-prompt="Why is my password weak?">
+                    Why is my Password Weak?
+                </button>
+                <button class="ai-suggest-chip inline-block px-3.5 py-1.5 bg-blue-50 border border-blue-100 hover:bg-blue-100 hover:border-blue-200 text-blue-700 text-xs font-semibold rounded-full transition duration-150 transform active:scale-95 flex-shrink-0" 
+                        data-prompt="How can I improve my security score?">
+                    How can I Improve Security?
+                </button>
+                <button class="ai-suggest-chip inline-block px-3.5 py-1.5 bg-blue-50 border border-blue-100 hover:bg-blue-100 hover:border-blue-200 text-blue-700 text-xs font-semibold rounded-full transition duration-150 transform active:scale-95 flex-shrink-0" 
+                        data-prompt="What is k-Anonymity?">
+                    What is k-Anonymity?
+                </button>
+                <button class="ai-suggest-chip inline-block px-3.5 py-1.5 bg-blue-50 border border-blue-100 hover:bg-blue-100 hover:border-blue-200 text-blue-700 text-xs font-semibold rounded-full transition duration-150 transform active:scale-95 flex-shrink-0" 
+                        data-prompt="What is password entropy?">
+                    What is Password Entropy?
+                </button>
+                <button class="ai-suggest-chip inline-block px-3.5 py-1.5 bg-blue-50 border border-blue-100 hover:bg-blue-100 hover:border-blue-200 text-blue-700 text-xs font-semibold rounded-full transition duration-150 transform active:scale-95 flex-shrink-0" 
+                        data-prompt="How do hackers crack passwords?">
+                    How are Passwords Cracked?
+                </button>
+                <button class="ai-suggest-chip inline-block px-3.5 py-1.5 bg-blue-50 border border-blue-100 hover:bg-blue-100 hover:border-blue-200 text-blue-700 text-xs font-semibold rounded-full transition duration-150 transform active:scale-95 flex-shrink-0" 
+                        data-prompt="Explain data breaches">
+                    Explain Data Breaches
+                </button>
+                <button class="ai-suggest-chip inline-block px-3.5 py-1.5 bg-blue-50 border border-blue-100 hover:bg-blue-100 hover:border-blue-200 text-blue-700 text-xs font-semibold rounded-full transition duration-150 transform active:scale-95 flex-shrink-0" 
+                        data-prompt="Should I enable 2FA for my account?">
+                    Should I Enable 2FA?
+                </button>
+            </div>
+
+            <!-- Input Form Box -->
+            <form id="ai-chat-form" class="p-3 bg-white border-t border-gray-200 flex items-center space-x-2">
+                <input type="text" id="ai-chat-input" required autocomplete="off"
+                       class="flex-grow px-4 py-2.5 bg-gray-50 border border-gray-200 text-gray-900 text-sm rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:bg-white placeholder-gray-400 transition duration-150 focus:outline-none"
+                       placeholder="Ask a cybersecurity question...">
+                <button type="submit" class="p-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl shadow transition duration-150 transform active:scale-95 flex-shrink-0">
+                    <svg class="h-5 w-5 transform rotate-90" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                    </svg>
+                </button>
+            </form>
+        </div>
+
+    </div>
+</div>

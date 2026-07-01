@@ -114,3 +114,18 @@ class RestApiTestCase(TestCase):
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertIn('security_score', response.json())
+
+    def test_api_ai_advisor_chat(self):
+        url = reverse('api_ai_advisor_chat')
+        # Test anonymous chat
+        response = self.client.post(url, {'message': 'What is k-Anonymity?'}, content_type='application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIn('response', response.json())
+        self.assertTrue(response.json()['is_fallback'])
+        
+        # Test authenticated chat
+        self.client.force_login(self.user)
+        response = self.client.post(url, {'message': 'Explain my security score'}, content_type='application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIn('response', response.json())
+        self.assertTrue(response.json()['is_fallback'])
